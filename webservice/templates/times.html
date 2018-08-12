@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interview API test</title>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="http://cdn.bootcss.com/twitter-bootstrap/2.2.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://www.bootcss.com/p/bootstrap-datetimepicker/bootstrap-datetimepicker/css/datetimepicker.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    
+
+  <style>/*
+    label, input { display:block; }*/
+    input.text { margin-bottom:12px; width:95%; padding: .4em; }
+    fieldset { padding:0; border:0; margin-top:25px; }
+    h1 { font-size: 1.2em; margin: .6em 0; }
+    /*div#main {display:inline-block}*/
+    div#users-contain { width: 70%; margin: 20px 0; }
+    div#users-contain table { margin: 1em 0; border-collapse: collapse; width: 100%; }
+    div#users-contain table td, div#users-contain table th { border: 1px solid #eee; padding: .6em 10px; text-align: left; }
+    .ui-dialog .ui-state-error { padding: .3em; }
+    .validateTips { border: 1px solid transparent; padding: 0.3em; }
+    div#request-contain { width: 70%; margin: 20px 0; text-align: left; display:inline}
+  </style>
+
+</head>
+<body>
+ {% csrf_token %}
+ <div id="main">
+	<div id="dialog-newTime">	 
+		  <form>
+		  	<p>Please Specify on which day you are available</p>
+		    <div class="input-append date form_datetime" id="form_date">
+			    <input size="16" type="text" value="" readonly id="input_date">
+			    <span class="add-on"><i class="icon-th"></i></span>
+			</div>
+			<p>Please Specify your earliest starting time<br>
+				e.g. 18:00 means 6pm
+			</p>
+			<input type="text" name="name" id="start_from" class="text ui-widget-content ui-corner-all">
+			<p>Please Specify your latest ending time</p>
+			<input type="text" name="name" id="end_to" class="text ui-widget-content ui-corner-all">
+			<input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+	  </form>
+	</div>
+
+	<a href="/index"">Back to home</a>
+	<div id="users-contain" class="ui-widget">
+	  <h1 id="">{{user.username}}</h1>
+	  <h1 id="h_id" style="display:none">{{user.id}}</h1>
+	  <table id="availables" class="ui-widget ui-widget-content">
+	    <thead>
+	      <tr class="ui-widget-header ">
+	        <th>Date</th>
+	        <th>Start</th>
+	        <th>End</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	    	{% for a in available_time %}
+		      <tr>
+		      	<td>{{a.date}}</td>
+		        <td>{{a.start_from}}</td>
+		        <td>{{a.end_to}}</td>
+		      </tr>
+	    	{% endfor %}
+	    </tbody>
+	  </table>
+
+	  <h1>{{user.username}}'s Interviews</h1>
+	  <table id="attends" class="ui-widget ui-widget-content">
+	    <thead>
+	      <tr class="ui-widget-header ">
+	        <th>topics</th>
+	        <th>role</th>
+	        <th>status</th>
+	        <th>date</th>
+	        <th>start_from</th>
+	        <th>end_to</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	    	{% for a in attends %}
+		      <tr>
+		      	<td>{{a.interview.topics}}</td>
+		      	<td>{{a.get_role_display}}</td>
+		      	<td>{{a.get_status_display}}</td>
+		        <td>{{a.interview.date}}</td>
+		        <td>{{a.interview.start_from}}</td>
+		        <td>{{a.interview.end_to}}</td>
+		      </tr>
+	    	{% endfor %}
+	    </tbody>
+	  </table>
+	</div>
+	<button id="new_time">Add availables</button>
+	<p>An interview can not been arranged here because candidates and interviewers need to be choosen.</p>
+ </div>
+
+<!-- <script src="http://cdn.bootcss.com/jquery/1.9.1/jquery.min.js"></script>  -->
+<script src="http://cdn.bootcss.com/twitter-bootstrap/2.2.2/bootstrap.min.js"></script> 
+<script src="http://www.bootcss.com/p/bootstrap-datetimepicker/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script> 
+<script src="{{STATIC_URL}}/static/js/time.js"></script> 
+
+
+</body>
+</html>

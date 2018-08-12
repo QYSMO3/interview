@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interview API test</title>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+  <style>/*
+    label, input { display:block; }*/
+    input.text { margin-bottom:12px; width:95%; padding: .4em; }
+    fieldset { padding:0; border:0; margin-top:25px; }
+    h1 { font-size: 1.2em; margin: .6em 0; }
+    /*div#main {display:inline-block}*/
+    div#users-contain { width: 40%; margin: 20px 0; }
+    div#users-contain table { margin: 1em 0; border-collapse: collapse; width: 100%; }
+    div#users-contain table td, div#users-contain table th { border: 1px solid #eee; padding: .6em 10px; text-align: left; }
+    .ui-dialog .ui-state-error { padding: .3em; }
+    .validateTips { border: 1px solid transparent; padding: 0.3em; }
+    div#request-contain { width: 70%; margin: 20px 0; text-align: left}
+    #r_get { border: 3px solid #eee; padding: .6em 10px; text-align: left; }
+  </style>
+
+</head>
+<body>
+ {% csrf_token %}
+ <div id="main">
+	<div id="dialog-newUser" title="Create new user">	 
+	  <form>
+	    <fieldset>
+	      <label for="name">Name</label>
+	      <input type="text" id = "username" class="text ui-widget-content ui-corner-all">
+	 
+	      <!-- Allow form submission with keyboard without duplicating the dialog button -->
+	      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+	    </fieldset>
+	  </form>
+	</div>
+	 
+	<div id="users-contain" class="ui-widget">
+	  <h1>Existing Users:</h1>
+	  <table id="users" class="ui-widget ui-widget-content">
+	    <thead>
+	      <tr class="ui-widget-header ">
+	        <th>ID</th>
+	        <th>Username</th>
+	        <th>Operations</th>
+	        <th>Interview_role</th>
+	      </tr>
+	    </thead>
+	    <tbody>
+	    	{% for u in Users %}
+		      <tr>
+		      	<td>{{u.id}}</td>
+		        <td>{{u.username}}</td>
+		        <td><a href="/times/{{u.id}}"">view/edit times</a></td>
+		        <td>
+		        	<select id='s_{{u.id}}' name='s_interview'>
+		        		<option value="0">N/A</option>
+			          	<option value="1">Candidate</option>
+			          	<option value="2">Interviewer</option>
+			      	</select>
+		        </td>
+		      </tr>
+	    	{% endfor %}
+	    </tbody>
+	  </table>
+	  <button id="create-user">Create new user</button>
+	  <button name="arrange_interview" onclick="arrange(0)">Test the API</button>
+	  <button name="arrange_interview" onclick="arrange(1)">Arrange an interview</button>
+	</div>
+	<h1>Introductions:</h1>
+		1. A user can be a candidate or an interviewer. The role can be specified using the select button. The role would be used when testing the API or arrange an interview</br>
+		2. To view or edit a user's available time, click the link of "view/edit times"</br>
+		3. "Test API" would send the request only, but no operations. It would call the API to arrange the interview</br>
+		4. To arrange the interview, click the "arrange an interview" button. The interview would be arranged by the role specified on this page. If more than one time are abailable, the interview would be arranged automaticly on the earliest date.</br>
+	</p>
+	<div id="request-contain" class="ui-widget">
+		<h1>Request Get</h1>
+		<p id="r_get"> 1 </p>
+	</div>
+ </div>
+
+  
+
+
+<script src="{{STATIC_URL}}/static/js/index.js"></script> 
+</body>
+</html>
