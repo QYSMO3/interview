@@ -88,12 +88,12 @@ $( "[name='arrange_interview']" ).button()
 
 function arrange(opt){
 	selects = $("select[name='s_interview']");
-	var c;
+	var c=new Array;
 	var i=new Array;
 	$.each(selects, function(){ 
 		var id =this.id.substring(this.id.indexOf('_')+1,this.id.length)   
     	if (this.value==1){
-    		c=id
+    		c.push(id)
     	}else if (this.value==2){
     		i.push(id)
     	}

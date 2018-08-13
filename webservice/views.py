@@ -79,7 +79,7 @@ def interviews(request):
                     a_I.save()
                 return JsonResponse(Successful_response)
             else:
-            	return HttpResponseBadRequest('No available time')
+                return HttpResponseBadRequest('No available time')
         else:
             return HttpResponseBadRequest('need one candidate and at least one interviewer')
     else:
@@ -95,11 +95,11 @@ def availables(request):
         if ID and date and start_from and end_to:
             user = get_object_or_404(User, pk=ID)
             try:
-            	a = models.AvailableTime(user=user, date=date, start_from=start_from, end_to=end_to)
-            	a.save()
-            	return JsonResponse(Successful_response)
+                a = models.AvailableTime(user=user, date=date, start_from=start_from, end_to=end_to)
+                a.save()
+                return JsonResponse(Successful_response)
             except Exception,e:
-            	logger.error(e,exc_info  = True)
+                logger.error(e,exc_info  = True)
         else:
             return HttpResponseBadRequest('not enough information')
 
@@ -141,6 +141,8 @@ def find_available_time(c,i_list):
     available_times={} #{date1:[(start,to),(start,to)],date2:[(start,to)]}
     # find out candidate's available time
     available_times = query_to_dict(models.AvailableTime.objects.filter(user=candidate))
+    c_interviews = query_to_dict(models.Interview.objects.filter(attends__user=candidate).exclude(attends__status=2))
+    available_times = match_querys(available_times,available_times,c_interviews)
 
     for interviewer in interviewer_list:
         i_query = query_to_dict(models.AvailableTime.objects.filter(user=interviewer))
@@ -158,7 +160,7 @@ def find_available_time(c,i_list):
             fianl_slot = get_full_time(s)
             _l+=fianl_slot
         if _l:
-	        _available_times[i.strftime('%Y-%m-%d')] = _l
+            _available_times[i.strftime('%Y-%m-%d')] = _l
 
     return _available_times
 
